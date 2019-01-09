@@ -1,4 +1,4 @@
-#include "elf_maker.c"
+#include "../src/elf_maker.c"
 int main()
 {
   /* elf maker init */
