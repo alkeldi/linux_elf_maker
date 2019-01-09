@@ -1,4 +1,4 @@
-#include "elf_maker.h"
+#include "elf_maker.c"
 int main()
 {
   /* elf maker init */
@@ -18,7 +18,7 @@ int main()
   }
 
   /* write the elf file*/
-  elf_maker_write(elf_file, ofile, NULL_SECTION | STRINGS_SECTION);
+  elf_maker_write(elf_file, ofile);
 
   /*cleanup */
   fclose(ofile);
