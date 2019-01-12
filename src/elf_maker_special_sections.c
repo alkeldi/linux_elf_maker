@@ -5,7 +5,7 @@ elf_section_t *add_null_section(elf_file_t *elf_file)
 {
   if (!elf_file)
     return NULL;
-  elf_section_t *null_section = elf_maker_add_section(elf_file, ".null");
+  elf_section_t *null_section = elf_maker_add_section(elf_file, NULL);
   return null_section;
 }
 
