@@ -4,4 +4,9 @@ Currently supporting only 32bit elf files.
 
  Run Example:
 
-   `rm -f a.out output; gcc *.c;./a.out; readelf -a output`
+  `rm -f a.out output; gcc *.c;./a.out; readelf -a output`
+
+Link &run Output:
+
+  `ld output`
+  `./a.out; echo $?`

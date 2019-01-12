@@ -47,27 +47,6 @@ elf_section_t *add_symbol_table_strings_section(elf_file_t *elf_file, elf_sectio
   return symbol_table_strings_section;
 }
 
-int add_symbol_table_entry(elf_section_t *symbol_table_section, elf_section_t *symbol_table_strings_section,
-                           elf_symbol_table_entry_t *entry, char *name)
-{
-  if (!symbol_table_section || !symbol_table_strings_section || !entry)
-    return 0;
-
-  entry->st_name = symbol_table_strings_section->header.sh_size;
-
-  if (!elf_maker_add_section_entry(symbol_table_section, entry, sizeof(elf_symbol_table_entry_t)))
-  {
-    return 0;
-  }
-
-  if (!name || !elf_maker_add_section_entry(symbol_table_strings_section, name, strlen(name) + 1))
-  {
-    entry->st_name = 0; //if adding name entry failed, then set it back to '\0'
-  }
-
-  return 1;
-}
-
 elf_section_t *add_text_section(elf_file_t *elf_file, elf_section_t *symbol_table_section, elf_section_t *symbol_table_strings_section)
 {
   if (!elf_file || !symbol_table_section || !symbol_table_strings_section)
@@ -88,6 +67,27 @@ elf_section_t *add_text_section(elf_file_t *elf_file, elf_section_t *symbol_tabl
   add_symbol_table_entry(symbol_table_section, symbol_table_strings_section, &sym_entry, "_start");
 
   return text_section;
+}
+
+int add_symbol_table_entry(elf_section_t *symbol_table_section, elf_section_t *symbol_table_strings_section,
+                           elf_symbol_table_entry_t *entry, char *name)
+{
+  if (!symbol_table_section || !symbol_table_strings_section || !entry)
+    return 0;
+
+  entry->st_name = symbol_table_strings_section->header.sh_size;
+
+  if (!elf_maker_add_section_entry(symbol_table_section, entry, sizeof(elf_symbol_table_entry_t)))
+  {
+    return 0;
+  }
+
+  if (!name || !elf_maker_add_section_entry(symbol_table_strings_section, name, strlen(name) + 1))
+  {
+    entry->st_name = 0; //if adding name entry failed, then set it back to '\0'
+  }
+
+  return 1;
 }
 
 void finalize_strings_section(elf_file_t *elf_file, elf_section_t *strings_section)

@@ -24,6 +24,12 @@ int main()
 
   /* add text section*/
   elf_section_t *text_section = add_text_section(elf_file, symbol_table_section, symbol_table_strings_section);
+  int32_t i1 = 0x000001b8;
+  int32_t i2 = 0x00ffbb00;
+  int32_t i3 = 0x80cd0000;
+  elf_maker_add_section_entry(text_section, &i1, 4);
+  elf_maker_add_section_entry(text_section, &i2, 4);
+  elf_maker_add_section_entry(text_section, &i3, 4);
 
   /* finalize the string section */
   finalize_strings_section(elf_file, strings_section);
