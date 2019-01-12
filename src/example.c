@@ -1,33 +1,32 @@
 #include "elf_maker.h"
+#include "elf_maker_special_sections.h"
 #include <string.h>
+
 int main()
 {
   /* elf maker init */
   elf_file_t *elf_file = elf_maker_init();
 
+  /* get sections info */
+  SLLInfo *sections_info = elf_file->sections->data;
+
   /* add null section */
-  elf_section_t *null_section = elf_maker_add_section(elf_file, ".null");
+  elf_section_t *null_section = add_null_section(elf_file);
 
   /* add strings section (can't be the first section)*/
-  elf_section_t *strings_section = elf_maker_add_section(elf_file, ".shstrtab");
-  strings_section->header.sh_type = SHT_STRTAB;
+  elf_section_t *strings_section = add_strings_section(elf_file);
 
-  /* tell elf file about the index of the strings section */
-  elf_file->header.e_shstrndx = 1;
+  /* add symbol table section */
+  elf_section_t *symbol_table_section = add_symbol_table_section(elf_file);
+
+  /* add symbol table strings section */
+  elf_section_t *symbol_table_strings_section = add_symbol_table_strings_section(elf_file, symbol_table_section);
+
+  /* add text section*/
+  elf_section_t *text_section = add_text_section(elf_file, symbol_table_section, symbol_table_strings_section);
 
   /* finalize the string section */
-  elf_maker_add_section_entry(strings_section, "\0", 1);
-  SLLNode *sections_iter = elf_file->sections->next;
-  while (sections_iter)
-  {
-    elf_section_t *section = sections_iter->data;
-    if (section->name)
-    {
-      section->header.sh_name = strings_section->header.sh_size;
-      elf_maker_add_section_entry(strings_section, section->name, strlen(section->name) + 1);
-    }
-    sections_iter = sections_iter->next;
-  }
+  finalize_strings_section(elf_file, strings_section);
 
   /* prepare output file */
   FILE *ofile = fopen("output", "w");

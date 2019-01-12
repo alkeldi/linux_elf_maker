@@ -10,6 +10,7 @@
 /* elf and section headers - wrapers*/
 typedef Elf32_Ehdr elf_header_t;
 typedef Elf32_Shdr elf_section_header_t;
+typedef Elf32_Sym elf_symbol_table_entry_t;
 
 /* elf file struct */
 typedef struct elf_file_t
